@@ -156,11 +156,11 @@ char *fifoReceive = "/tmp/fifoA";
 BEGIN 1. A_B SEND PUBLIC KEY
 *****/
 void sendPubKey(sgx_ec256_public_t pubKey) {
-    mkfifo(fifoSend, 0666);
-    int pipe = open(fifoSend, O_WRONLY);
+    mkfifo("/tmp/fifoB", 0666);
+    int pipe = open("/tmp/fifoB", O_WRONLY);
     // public key is 256 bits
-    write(pipe, &pubKey.gx, 32);
-    write(pipe, &pubKey.gy, 32);
+    write(pipe, pubKey.gx, 32);
+    write(pipe, pubKey.gy, 32);
     close(pipe);
 }
 /*****
@@ -171,12 +171,12 @@ END 1. A_B SEND PUBLIC KEY
 BEGIN 1. A_B RECEIVE PUBLIC KEY
 *****/
 sgx_ec256_public_t receivePubKey() {
-    mkfifo(fifoReceive, 0666);
-    int pipe = open(fifoReceive, O_RDONLY);
+    //mkfifo("/tmp/fifoA", 0666);
+    int pipe = open("/tmp/fifoA", O_RDONLY);
     // public key is 256 bits
     sgx_ec256_public_t pubKey;
-    read(pipe, &pubKey.gx, 32);
-    read(pipe, &pubKey.gy, 32);
+    read(pipe, pubKey.gx, 32);
+    read(pipe, pubKey.gy, 32);
     close(pipe);
     return pubKey;
 }
@@ -232,7 +232,7 @@ int SGX_CDECL main(int argc, char *argv[])
    /*****
     BEGIN 3. A_B CALCULATE SHARED SECRET
     *****/
-    ret = sharedSecret(global_eid, &sgx_status, &pubKeyB);
+    ret = sharedSecret(global_eid, &sgx_status, &pubKeyA);
     if (ret == SGX_SUCCESS) {
         printf("Enclave_B calculated shared key\n");
     } else {
