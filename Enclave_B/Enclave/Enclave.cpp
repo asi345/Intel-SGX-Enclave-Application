@@ -16,7 +16,7 @@ sgx_ec256_private_t *p_private;
 sgx_ec256_public_t *p_public;
 
 sgx_ec256_dh_shared_t *p_shared_key;
-const sgx_aes_ctr_128bit_key_t *p_key;
+sgx_aes_ctr_128bit_key_t *p_key;
 
 
 /*****
