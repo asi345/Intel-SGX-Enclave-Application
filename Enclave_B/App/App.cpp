@@ -228,15 +228,18 @@ int SGX_CDECL main(int argc, char *argv[])
     *****/
 
    /*****
-    BEGIN 3. A_A CALCULATE SHARED SECRET
+    BEGIN 3. A_B CALCULATE SHARED SECRET
     *****/
-   ret = sharedSecret(global_eid, &sgx_status, &pubKeyA);
-    if (sgx_status == SGX_SUCCESS)
+    printf('going in sir\n');
+    ret = sharedSecret(global_eid, &sgx_status, &pubKeyB);
+    if (ret == SGX_SUCCESS) {
         printf("Enclave_B calculated shared key\n");
-    else
+    } else {
         printf("Enclave_B could not calculate shared key\n");
+        print_error_message(ret);
+    }
    /*****
-    END 3. A_A CALCULATE SHARED SECRET
+    END 3. A_B CALCULATE SHARED SECRET
     *****/
 
 

@@ -201,11 +201,11 @@ int SGX_CDECL main(int argc, char *argv[])
     sgx_ec256_public_t pubKeyA;
 
     ret = eccKeyPair(global_eid, &sgx_status, &pubKeyA);
-    if (sgx_status == SGX_SUCCESS) {
+    if (ret == SGX_SUCCESS) {
         printf("Enclave_A created\n");
     } else {
         printf("Enclave_A not created\n");
-        print_error_message(sgx_status);
+        print_error_message(ret);
     }
 
     /*****
@@ -229,11 +229,14 @@ int SGX_CDECL main(int argc, char *argv[])
    /*****
     BEGIN 3. A_A CALCULATE SHARED SECRET
     *****/
-   ret = sharedSecret(global_eid, &sgx_status, &pubKeyB);
-    if (sgx_status == SGX_SUCCESS)
+    printf('going in sir\n');
+    ret = sharedSecret(global_eid, &sgx_status, &pubKeyB);
+    if (ret == SGX_SUCCESS) {
         printf("Enclave_A calculated shared key\n");
-    else
+    } else {
         printf("Enclave_A could not calculate shared key\n");
+        print_error_message(ret);
+    }
    /*****
     END 3. A_A CALCULATE SHARED SECRET
     *****/
