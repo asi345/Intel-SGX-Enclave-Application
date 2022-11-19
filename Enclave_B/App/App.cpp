@@ -228,10 +228,15 @@ int SGX_CDECL main(int argc, char *argv[])
     END 1. A_B RECEIVE PUBLIC KEY
     *****/
 
+    printSecret(global_eid, &sgx_status);
+    if (sgx_status != SGX_SUCCESS) {
+        print_error_message(sgx_status);
+        return -1;
+    }
+
    /*****
     BEGIN 3. A_B CALCULATE SHARED SECRET
     *****/
-    printf("going in sir from B\n");
     ret = sharedSecret(global_eid, &sgx_status, &pubKeyB);
     if (ret == SGX_SUCCESS) {
         printf("Enclave_B calculated shared key\n");
