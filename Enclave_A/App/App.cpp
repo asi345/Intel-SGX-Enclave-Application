@@ -10,6 +10,8 @@
 #include "Enclave_u.h"
 
 #include "sgx_tcrypto.h"
+#include <sys/types.h>
+#include <sys/stat.h>
 
 /* Global EID shared by multiple threads */
 sgx_enclave_id_t global_eid = 0;
@@ -144,6 +146,41 @@ void ocall_print_string(const char *str)
     printf("%s", str);
 }
 
+char *fifoSend = "/tmp/fifoA";
+char *fifoReceive = "/tmp/fifoB";
+
+/*****
+BEGIN 1. A_A SEND PUBLIC KEY
+*****/
+void sendPubKey(sgx_ec256_public_t pubKey) {
+    mkfifo(fifoSend, 0666);
+    int pipe = open(fifoSend, O_RDWR);
+    // public key is 256 bits
+    write(pipe, pubKey.gx, 32);
+    write(pipe, pubKey.gy, 32);
+    close(pipe);
+}
+/*****
+END 1. A_A SEND PUBLIC KEY
+*****/
+
+/*****
+BEGIN 1. A_A RECEIVE PUBLIC KEY
+*****/
+sgx_ec256_public_t receivePubKey() {
+    mkfifo(fifoReceive, 0666);
+    int pipe = open(fifoReceive, O_RDWR);
+    // public key is 256 bits
+    sgx_ec256_public_t pubKey;
+    read(pipe, pubKey.gx, 32);
+    read(pipe, pubKey.gy, 32);
+    close(pipe);
+    return pubKey;
+}
+/*****
+END 1. A_A RECEIVE PUBLIC KEY
+*****/
+
 
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
@@ -156,20 +193,35 @@ int SGX_CDECL main(int argc, char *argv[])
         return -1;
     }
     printf("From App: Enclave creation success. \n");
-    printf("From App: Write your protocol here ... \n");
-
 
     sgx_status_t sgx_status;
 
     sgx_status_t ret;
-    sgx_ec256_public_t pubKey;
+    sgx_ec256_public_t pubKeyA;
 
-    ret = eccKeyPair(global_eid, &sgx_status, &pubKey);
+    ret = eccKeyPair(global_eid, &sgx_status, &pubKeyA);
     if (ret == SGX_SUCCESS)
         printf("Enclave_A created\n");
     else
         printf("Enclave_A not created\n");
 
+    /*****
+    BEGIN 1. A_A SEND PUBLIC KEY
+    *****/
+    sendPubKey(pubKeyA);
+    printf("A has sended public key\n");
+    /*****
+    END 1. A_A SEND PUBLIC KEY
+    *****/
+
+   /*****
+    BEGIN 1. A_A RECEIVE PUBLIC KEY
+    *****/
+    sgx_ec256_public_t pubKeyB = receivePubKey();
+    printf("A has received public key\n");
+    /*****
+    END 1. A_A RECEIVE PUBLIC KEY
+    *****/
 
     printSecret(global_eid, &sgx_status);
     if (sgx_status != SGX_SUCCESS) {

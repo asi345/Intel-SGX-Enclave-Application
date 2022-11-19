@@ -10,6 +10,8 @@
 #include "Enclave_u.h"
 
 #include "sgx_tcrypto.h"
+#include <sys/types.h>
+#include <sys/stat.h>
 
 /* Global EID shared by multiple threads */
 sgx_enclave_id_t global_eid = 0;
@@ -144,6 +146,41 @@ void ocall_print_string(const char *str)
     printf("%s", str);
 }
 
+char *fifoSend = "/tmp/fifoB";
+char *fifoReceive = "/tmp/fifoA";
+
+/*****
+BEGIN 1. A_B SEND PUBLIC KEY
+*****/
+void sendPubKey(sgx_ec256_public_t pubKey) {
+    mkfifo(fifoSend, 0666);
+    int pipe = open(fifoSend, O_RDWR);
+    // public key is 256 bits
+    write(pipe, pubKey.gx, 32);
+    write(pipe, pubKey.gy, 32);
+    close(pipe);
+}
+/*****
+END 1. A_B SEND PUBLIC KEY
+*****/
+
+/*****
+BEGIN 1. A_B RECEIVE PUBLIC KEY
+*****/
+sgx_ec256_public_t receivePubKey() {
+    mkfifo(fifoReceive, 0666);
+    int pipe = open(fifoReceive, O_RDWR);
+    // public key is 256 bits
+    sgx_ec256_public_t pubKey;
+    read(pipe, pubKey.gx, 32);
+    read(pipe, pubKey.gy, 32);
+    close(pipe);
+    return pubKey;
+}
+/*****
+END 1. A_B RECEIVE PUBLIC KEY
+*****/
+
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
 {
@@ -161,13 +198,31 @@ int SGX_CDECL main(int argc, char *argv[])
     sgx_status_t sgx_status;
     sgx_status_t ret;
 
-    sgx_ec256_public_t pubKey;
+    sgx_ec256_public_t pubKeyB;
 
-    ret = eccKeyPair(global_eid, &sgx_status, &pubKey);
+    ret = eccKeyPair(global_eid, &sgx_status, &pubKeyB);
     if (ret == SGX_SUCCESS)
-        printf("Enclave_A created\n");
+        printf("Enclave_B created\n");
     else
-        printf("Enclave_A not created\n");
+        printf("Enclave_B not created\n");
+
+    /*****
+    BEGIN 1. A_B SEND PUBLIC KEY
+    *****/
+    sendPubKey(pubKeyB);
+    printf("B has sended public key\n");
+    /*****
+    END 1. A_B SEND PUBLIC KEY
+    *****/
+
+   /*****
+    BEGIN 1. A_B RECEIVE PUBLIC KEY
+    *****/
+    sgx_ec256_public_t pubKeyA = receivePubKey();
+    printf("B has received public key\n");
+    /*****
+    END 1. A_B RECEIVE PUBLIC KEY
+    *****/
 
 
     printSecret(global_eid, &sgx_status);
