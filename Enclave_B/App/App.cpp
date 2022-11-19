@@ -12,6 +12,7 @@
 #include "sgx_tcrypto.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 
 /* Global EID shared by multiple threads */
 sgx_enclave_id_t global_eid = 0;
