@@ -158,16 +158,8 @@ BEGIN 1. A_A SEND PUBLIC KEY
 void sendPubKey(sgx_ec256_public_t pubKey) {
     mkfifo("/tmp/fifoA", 0666);
     int pipe = open("/tmp/fifoA", O_WRONLY);
-    char* buf = new char[32];
-    for (int i = 0; i < 32; i ++) {
-        buf[i] = (char) pubKey.gx[i];
-    }
-    // public key is 256 bits
-    write(pipe, buf, 32);
-    for (int i = 0; i < 32; i ++) {
-        buf[i] = (char) pubKey.gy[i];
-    }
-    write(pipe, buf, 32);
+    write(pipe, pubKey.gx, 32);
+    write(pipe, pubKey.gy, 32);
     close(pipe);
 }
 /*****
@@ -210,11 +202,11 @@ int SGX_CDECL main(int argc, char *argv[])
     sgx_ec256_public_t pubKeyA;
 
     ret = eccKeyPair(global_eid, &sgx_status, &pubKeyA);
-    if (ret == SGX_SUCCESS) {
+    if (sgx_status == SGX_SUCCESS) {
         printf("Enclave_A created\n");
     } else {
         printf("Enclave_A not created\n");
-        print_error_message(ret);
+        print_error_message(sgx_status);
     }
 
     /*****
@@ -239,11 +231,11 @@ int SGX_CDECL main(int argc, char *argv[])
     BEGIN 3. A_A CALCULATE SHARED SECRET
     *****/
     ret = sharedSecret(global_eid, &sgx_status, &pubKeyB);
-    if (ret == SGX_SUCCESS) {
+    if (sgx_status == SGX_SUCCESS) {
         printf("Enclave_A calculated shared key\n");
     } else {
         printf("Enclave_A could not calculate shared key\n");
-        print_error_message(ret);
+        print_error_message(sgx_status);
     }
    /*****
     END 3. A_A CALCULATE SHARED SECRET
