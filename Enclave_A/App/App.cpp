@@ -231,7 +231,6 @@ int SGX_CDECL main(int argc, char *argv[])
     *****/
     sgx_ec256_public_t pubKeyB = receivePubKey();
     printf("A has received public key\n");
-    printf(pubKeyB.gx);
     /*****
     END 1. A_A RECEIVE PUBLIC KEY
     *****/
