@@ -224,6 +224,18 @@ int SGX_CDECL main(int argc, char *argv[])
     END 1. A_A RECEIVE PUBLIC KEY
     *****/
 
+   /*****
+    BEGIN 3. A_A CALCULATE SHARED SECRET
+    *****/
+   ret = sharedSecret(global_eid, &sgx_status, &pubKeyB);
+    if (ret == SGX_SUCCESS)
+        printf("Enclave_A calculated shared key\n");
+    else
+        printf("Enclave_A could not calculate shared key\n");
+   /*****
+    END 3. A_A CALCULATE SHARED SECRET
+    *****/
+
     printSecret(global_eid, &sgx_status);
     if (sgx_status != SGX_SUCCESS) {
         print_error_message(sgx_status);

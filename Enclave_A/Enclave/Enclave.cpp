@@ -14,6 +14,10 @@ sgx_ecc_state_handle_t *p_ecc_handle;
 sgx_ec256_private_t *p_private;
 sgx_ec256_public_t *p_public;
 
+sgx_ec256_dh_shared_t *p_shared_key;
+const sgx_aes_ctr_128bit_key_t *p_key;
+
+
 /*****
 BEGIN 2. E_A GENERATE KEY PAIR
 *****/
@@ -36,6 +40,25 @@ sgx_status_t eccKeyPair(sgx_ec256_public_t *p_public_key) {
 }
 /*****
 END 2. E_A GENERATE KEY PAIR
+*****/
+
+/*****
+BEGIN 3. E_A CALCULATE SHARED SECRET
+*****/
+sgx_status_t sharedSecret(sgx_ec256_public_t *p_pubKey) {
+  ret = sgx_ecc256_compute_shared_dhkey(p_private, p_pubKey, p_shared_key, *p_ecc_handle);
+  if (ret != SGX_SUCCESS)
+    return ret;
+
+  // AESCTR key will be 128-bit = 16 bytes length
+  for (int i = 0; i < 16; i++) {
+    *p_key[i] = *p_shared_key[i];
+  }
+
+  return SGX_SUCCESS;
+}
+/*****
+END 3. E_A CALCULATE SHARED SECRET
 *****/
 
 int printf(const char* fmt, ...)
