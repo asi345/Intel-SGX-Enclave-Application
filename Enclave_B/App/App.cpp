@@ -171,7 +171,7 @@ END 1. A_B SEND PUBLIC KEY
 BEGIN 1. A_B RECEIVE PUBLIC KEY
 *****/
 sgx_ec256_public_t receivePubKey() {
-    //mkfifo("/tmp/fifoA", 0666);
+    mkfifo("/tmp/fifoA", 0666);
     int pipe = open("/tmp/fifoA", O_RDONLY);
     // public key is 256 bits
     sgx_ec256_public_t pubKey;
@@ -225,6 +225,7 @@ int SGX_CDECL main(int argc, char *argv[])
     *****/
     sgx_ec256_public_t pubKeyA = receivePubKey();
     printf("B has received public key\n");
+    printf(pubKeyA);
     /*****
     END 1. A_B RECEIVE PUBLIC KEY
     *****/
