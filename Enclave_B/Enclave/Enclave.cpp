@@ -4,6 +4,8 @@
 #include <stdio.h> /* vsnprintf */
 #include <string.h>
 
+#include "sgx_tcrypto.h"
+
 
 int enclave_secret = 42;
 

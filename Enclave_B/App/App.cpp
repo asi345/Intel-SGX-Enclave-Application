@@ -9,6 +9,8 @@
 #include "App.h"
 #include "Enclave_u.h"
 
+#include "sgx_tcrypto.h"
+
 /* Global EID shared by multiple threads */
 sgx_enclave_id_t global_eid = 0;
 
@@ -165,7 +167,7 @@ int SGX_CDECL main(int argc, char *argv[])
         printf("Enclave_A created\n");
     else
         printf("Enclave_A not created\n");
-        
+
 
     printSecret(global_eid, &sgx_status);
     if (sgx_status != SGX_SUCCESS) {
