@@ -46,15 +46,18 @@ END 2. E_A GENERATE KEY PAIR
 BEGIN 3. E_A CALCULATE SHARED SECRET
 *****/
 sgx_status_t sharedSecret(sgx_ec256_public_t *p_pubKey) {
+  printf("startingA");
   ret = sgx_ecc256_compute_shared_dhkey(p_private, p_pubKey, p_shared_key, *p_ecc_handle);
   if (ret != SGX_SUCCESS)
     return ret;
 
+  printf("compute babyA");
   // AESCTR key will be 128-bit = 16 bytes length
   for (int i = 0; i < 16; i++) {
     *p_key[i] = p_shared_key->s[i];
   }
 
+  printf("are we good??A");
   return SGX_SUCCESS;
 }
 /*****

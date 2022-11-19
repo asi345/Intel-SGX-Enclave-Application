@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <cstdio>
 
 /* Global EID shared by multiple threads */
 sgx_enclave_id_t global_eid = 0;
