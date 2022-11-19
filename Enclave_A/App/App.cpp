@@ -158,9 +158,16 @@ BEGIN 1. A_A SEND PUBLIC KEY
 void sendPubKey(sgx_ec256_public_t pubKey) {
     mkfifo("/tmp/fifoA", 0666);
     int pipe = open("/tmp/fifoA", O_WRONLY);
+    char* buf = new char[32];
+    for (int i = 0; i < 32; i ++) {
+        buf[i] = (char) pubKey.gx[i];
+    }
     // public key is 256 bits
-    write(pipe, pubKey.gx, 32);
-    write(pipe, pubKey.gy, 32);
+    write(pipe, buf, 32);
+    for (int i = 0; i < 32; i ++) {
+        buf[i] = (char) pubKey.gy[i];
+    }
+    write(pipe, buf, 32);
     close(pipe);
 }
 /*****
