@@ -148,17 +148,19 @@ void ocall_print_string(const char *str)
     printf("%s", str);
 }
 
+char *fifoSend = "/tmp/fifoA";
+char *fifoReceive = "/tmp/fifoB";
+
 /*****
 BEGIN 1. A_A SEND PUBLIC KEY
 *****/
 void sendPubKey(sgx_ec256_public_t pubKey) {
-    const char *fifoSend = "/tmp/fifoA";
     mkfifo(fifoSend, 0666);
     int pipe = open(fifoSend, O_WRONLY);
     // public key is 256 bits
     write(pipe, pubKey.gx, 32);
     write(pipe, pubKey.gy, 32);
-    close(pipe);
+    //close(pipe);
 }
 /*****
 END 1. A_A SEND PUBLIC KEY
@@ -168,7 +170,6 @@ END 1. A_A SEND PUBLIC KEY
 BEGIN 1. A_A RECEIVE PUBLIC KEY
 *****/
 sgx_ec256_public_t receivePubKey() {
-    char *fifoReceive = "/tmp/fifoB";
     mkfifo(fifoReceive, 0666);
     int pipe = open(fifoReceive, O_RDONLY);
     // public key is 256 bits
