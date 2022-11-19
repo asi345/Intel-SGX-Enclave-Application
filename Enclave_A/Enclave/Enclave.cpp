@@ -52,7 +52,7 @@ sgx_status_t sharedSecret(sgx_ec256_public_t *p_pubKey) {
 
   // AESCTR key will be 128-bit = 16 bytes length
   for (int i = 0; i < 16; i++) {
-    *(p_key + i) = p_shared_key->s[i];
+    *p_key[i] = p_shared_key->s[i];
   }
 
   return SGX_SUCCESS;
