@@ -12,8 +12,8 @@ int enclave_secret = 42;
 sgx_status_t ret;
 
 sgx_ecc_state_handle_t ecc_handle;
-sgx_ec256_private_t private;
-sgx_ec256_public_t public;
+sgx_ec256_private_t private_key;
+sgx_ec256_public_t public_key;
 
 sgx_ec256_dh_shared_t shared_key;
 sgx_aes_ctr_128bit_key_t key;
@@ -27,14 +27,14 @@ sgx_status_t eccKeyPair(sgx_ec256_public_t *p_public_key) {
   if (ret != SGX_SUCCESS)
     return ret;
 
-  ret = sgx_ecc256_create_key_pair(&private, &public, ecc_handle);
+  ret = sgx_ecc256_create_key_pair(&private_key, &public_key, ecc_handle);
   if (ret != SGX_SUCCESS)
     return ret;
   
   // ecc key size = 256 bits = 32 bytes
   for (int i = 0; i < 32; i++) {
-    p_public_key->gx[i] = public.gx[i];
-    p_public_key->gy[i] = public.gy[i];
+    p_public_key->gx[i] = public_key.gx[i];
+    p_public_key->gy[i] = public_key.gy[i];
   }
 
   return SGX_SUCCESS;
@@ -48,7 +48,7 @@ BEGIN 3. E_B CALCULATE SHARED SECRET
 *****/
 sgx_status_t sharedSecret(sgx_ec256_public_t *p_pubKey) {
   printf("startingB");
-  ret = sgx_ecc256_compute_shared_dhkey(&private, p_pubKey, &shared_key, ecc_handle);
+  ret = sgx_ecc256_compute_shared_dhkey(&private_key, p_pubKey, &shared_key, ecc_handle);
   if (ret != SGX_SUCCESS)
     return ret;
 
