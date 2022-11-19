@@ -155,7 +155,7 @@ BEGIN 1. A_A SEND PUBLIC KEY
 *****/
 void sendPubKey(sgx_ec256_public_t pubKey) {
     mkfifo(fifoSend, 0666);
-    int pipe = open(fifoSend, O_RDWR);
+    int pipe = open(fifoSend, O_WRONLY);
     // public key is 256 bits
     write(pipe, pubKey.gx, 32);
     write(pipe, pubKey.gy, 32);
@@ -170,7 +170,7 @@ BEGIN 1. A_A RECEIVE PUBLIC KEY
 *****/
 sgx_ec256_public_t receivePubKey() {
     mkfifo(fifoReceive, 0666);
-    int pipe = open(fifoReceive, O_RDWR);
+    int pipe = open(fifoReceive, O_RDONLY);
     // public key is 256 bits
     sgx_ec256_public_t pubKey;
     read(pipe, pubKey.gx, 32);

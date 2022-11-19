@@ -75,7 +75,7 @@ int printf(const char* fmt, ...)
 
 sgx_status_t printSecret()
 {
-  char buf[BUFSIZ] = {"From Enclave: Hello from the enclave.\n"};
+  char buf[BUFSIZ] = {"From Enclave: Hello from the enclave B.\n"};
   ocall_print_string(buf);
   printf("From Enclave: Another way to print from the Enclave. My secret is %u.\n", enclave_secret);
   return SGX_SUCCESS;
