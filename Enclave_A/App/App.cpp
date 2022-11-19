@@ -161,10 +161,11 @@ int SGX_CDECL main(int argc, char *argv[])
 
     sgx_status_t sgx_status;
 
+    sgx_status_t ret;
     sgx_ec256_public_t pubKey;
 
-    eccKeyPair(global_eid, &sgx_status, &pubKey);
-    if (sgx_status == SGX_SUCCESS)
+    ret = eccKeyPair(global_eid, &sgx_status, &pubKey);
+    if (ret == SGX_SUCCESS)
         printf("Enclave_A created\n");
     else
         printf("Enclave_A not created\n");
