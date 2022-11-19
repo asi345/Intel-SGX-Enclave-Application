@@ -22,17 +22,14 @@ sgx_aes_ctr_128bit_key_t key;
 BEGIN 2. E_A GENERATE KEY PAIR
 *****/
 sgx_status_t eccKeyPair(sgx_ec256_public_t *p_public_key) {
-  printf("startingA");
   ret = sgx_ecc256_open_context(&ecc_handle);
   if (ret != SGX_SUCCESS)
     return ret;
 
-  printf("compute babyA");
   ret = sgx_ecc256_create_key_pair(&private_key, &public_key, ecc_handle);
   if (ret != SGX_SUCCESS)
     return ret;
   
-  printf("compute babyA2");
   // ecc key size = 256 bits = 32 bytes
   for (int i = 0; i < 32; i++) {
     p_public_key->gx[i] = public_key.gx[i];
@@ -49,18 +46,15 @@ END 2. E_A GENERATE KEY PAIR
 BEGIN 3. E_A CALCULATE SHARED SECRET
 *****/
 sgx_status_t sharedSecret(sgx_ec256_public_t *p_pubKey) {
-  printf("startingA");
   ret = sgx_ecc256_compute_shared_dhkey(&private_key, p_pubKey, &shared_key, ecc_handle);
   if (ret != SGX_SUCCESS)
     return ret;
 
-  printf("compute babyA");
   // AESCTR key will be 128-bit = 16 bytes length
   for (int i = 0; i < 16; i++) {
     key[i] = shared_key.s[i];
   }
 
-  printf("are we good??A");
   return SGX_SUCCESS;
 }
 /*****

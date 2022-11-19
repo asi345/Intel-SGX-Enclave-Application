@@ -155,10 +155,10 @@ BEGIN 1. A_A SEND PUBLIC KEY
 void sendPubKey(sgx_ec256_public_t pubKey) {
     mkfifo("/tmp/fifoA", 0666);
     int pipe = open("/tmp/fifoA", O_WRONLY);
-    int w1 = write(pipe, pubKey.gx, 32);
-    int w2 = write(pipe, pubKey.gy, 32);
+    // public key is 256 bits
+    write(pipe, pubKey.gx, 32);
+    write(pipe, pubKey.gy, 32);
     close(pipe);
-    printf("%d %d\n", w1, w2);
 }
 /*****
 END 1. A_A SEND PUBLIC KEY
@@ -172,10 +172,9 @@ sgx_ec256_public_t receivePubKey() {
     int pipe = open("/tmp/fifoB", O_RDONLY);
     // public key is 256 bits
     sgx_ec256_public_t pubKey;
-    int r1 = read(pipe, pubKey.gx, 32);
-    int r2 = read(pipe, pubKey.gy, 32);
+    read(pipe, pubKey.gx, 32);
+    read(pipe, pubKey.gy, 32);
     close(pipe);
-    printf("%d %d\n", r1, r2);
     return pubKey;
 }
 /*****
@@ -197,7 +196,6 @@ int SGX_CDECL main(int argc, char *argv[])
 
     sgx_status_t sgx_status;
 
-    sgx_status_t ret;
     sgx_ec256_public_t pubKeyA;
 
     eccKeyPair(global_eid, &sgx_status, &pubKeyA);
@@ -229,7 +227,7 @@ int SGX_CDECL main(int argc, char *argv[])
    /*****
     BEGIN 3. A_A CALCULATE SHARED SECRET
     *****/
-    ret = sharedSecret(global_eid, &sgx_status, &pubKeyB);
+    sharedSecret(global_eid, &sgx_status, &pubKeyB);
     if (sgx_status == SGX_SUCCESS) {
         printf("Enclave_A calculated shared key\n");
     } else {
