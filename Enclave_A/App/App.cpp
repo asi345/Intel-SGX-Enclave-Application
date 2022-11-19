@@ -161,7 +161,7 @@ void sendPubKey(sgx_ec256_public_t pubKey) {
     // public key is 256 bits
     write(pipe, pubKey.gx, 32);
     write(pipe, pubKey.gy, 32);
-    //close(pipe);
+    close(pipe);
 }
 /*****
 END 1. A_A SEND PUBLIC KEY
