@@ -22,14 +22,17 @@ sgx_aes_ctr_128bit_key_t *p_key;
 BEGIN 2. E_A GENERATE KEY PAIR
 *****/
 sgx_status_t eccKeyPair(sgx_ec256_public_t *p_public_key) {
+  printf("startingA");
   ret = sgx_ecc256_open_context(p_ecc_handle);
   if (ret != SGX_SUCCESS)
     return ret;
 
+  printf("compute babyA");
   ret = sgx_ecc256_create_key_pair(p_private, p_public, *p_ecc_handle);
   if (ret != SGX_SUCCESS)
     return ret;
   
+  printf("compute babyA2");
   // ecc key size = 256 bits = 32 bytes
   for (int i = 0; i < 32; i++) {
     p_public_key->gx[i] = p_public->gx[i];
