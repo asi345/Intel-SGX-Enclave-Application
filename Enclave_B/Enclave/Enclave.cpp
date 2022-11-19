@@ -28,7 +28,7 @@ sgx_status_t eccKeyPair(sgx_ec256_public_t *p_public_key) {
     return ret;
   
   // ecc key size = 256 bits = 32 bytes
-  for (int i = 0; i < 32: i++) {
+  for (int i = 0; i < 32; i++) {
     p_public_key->gx[i] = p_public->gx[i];
     p_public_key->gy[i] = p_public->gy[i];
   }
