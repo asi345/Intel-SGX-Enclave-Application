@@ -42,6 +42,7 @@ enclave {
 
     trusted{
       public sgx_status_t printSecret(void);
+      public sgx_status_t eccKeyPair([out] sgx_ec256_public_t *p_public_key);
     };
     /*
      * ocall_print_string - invokes OCALL to display string buffer inside the enclave.

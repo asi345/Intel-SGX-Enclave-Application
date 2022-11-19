@@ -4,7 +4,39 @@
 #include <stdio.h> /* vsnprintf */
 #include <string.h>
 
+#include "sgx_tcrypto.h"
+
 int enclave_secret = 1337;
+
+sgx_status_t ret;
+
+sgx_ecc_state_handle_t *p_ecc_handle;
+sgx_ec256_private_t *p_private;
+sgx_ec256_public_t *p_public;
+
+/*****
+BEGIN 2. E_A GENERATE KEY PAIR
+*****/
+sgx_status_t eccKeyPair(sgx_ec256_public_t *p_public_key) {
+  ret = sgx_ecc256_open_context(p_ecc_handle);
+  if (ret != SGX_SUCCESS)
+    return ret;
+
+  ret = sgx_ecc256_create_key_pair(p_private, p_public, *p_ecc_handle);
+  if (ret != SGX_SUCCESS)
+    return ret;
+  
+  // ecc key size = 256 bits = 32 bytes
+  for (int i = 0; i < 32: i++) {
+    p_public_key->gx[i] = p_public->gx[i];
+    p_public_key->gy[i] = p_public->gy[i];
+  }
+
+  return SGX_SUCCESS;
+}
+/*****
+END 2. E_A GENERATE KEY PAIR
+*****/
 
 int printf(const char* fmt, ...)
 {

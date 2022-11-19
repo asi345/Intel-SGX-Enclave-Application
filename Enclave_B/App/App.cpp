@@ -152,12 +152,20 @@ int SGX_CDECL main(int argc, char *argv[])
         printf("Enclave initialization failed.\n");
         return -1;
     }
-    printf("From App: Enclave creation success. \n");
-    
+    printf("From App: Enclave creation success. \n");  
     printf("From App: Write your protocol here ... \n");
 
 
     sgx_status_t sgx_status;
+
+    sgx_ec256_public_t pubKey;
+
+    eccKeyPair(global_eid, &sgx_status, &pubKey);
+    if (sgx_status == SGX_SUCCESS)
+        printf("Enclave_A created\n");
+    else
+        printf("Enclave_A not created\n");
+        
 
     printSecret(global_eid, &sgx_status);
     if (sgx_status != SGX_SUCCESS) {
