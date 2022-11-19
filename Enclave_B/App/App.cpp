@@ -202,10 +202,12 @@ int SGX_CDECL main(int argc, char *argv[])
     sgx_ec256_public_t pubKeyB;
 
     ret = eccKeyPair(global_eid, &sgx_status, &pubKeyB);
-    if (sgx_status == SGX_SUCCESS)
+    if (sgx_status == SGX_SUCCESS) {
         printf("Enclave_B created\n");
-    else
+    } else {
         printf("Enclave_B not created\n");
+        print_error_message(sgx_status);
+    }
 
     /*****
     BEGIN 1. A_B SEND PUBLIC KEY
