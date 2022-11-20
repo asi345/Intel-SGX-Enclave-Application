@@ -213,6 +213,20 @@ void receiveEncPSK(uint8_t *c, unsigned char *IV) {
 END 1. A_B RECEIVE ENCRYPTED PSK
 *****/
 
+/*****
+BEGIN 1. A_B RECEIVE ENCRYPTED CHALLENGE
+*****/
+void receiveEncChal(uint8_t *c, unsigned char *IV) {
+    mkfifo("/tmp/fifoA", 0666);
+    int pipe = open("/tmp/fifoA", O_RDONLY);
+    read(pipe, IV, 16);
+    read(pipe, c, 2);
+    close(pipe);
+}
+/*****
+END 1. A_B RECEIVE ENCRYPTED CHALLENGE
+*****/
+
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
 {
@@ -307,6 +321,18 @@ int SGX_CDECL main(int argc, char *argv[])
     }
    /*****
     END 1. A_B RECEIVE ENCRYPTED PSK
+    *****/
+
+   uint8_t c3[2];
+   unsigned char IV3[16];
+
+   /*****
+    BEGIN 1. A_B RECEIVE ENCRYPTED CHALLENGE
+    *****/
+    receiveEncChal(c3, IV3);
+    printf("B has received the challenge from A\n");
+   /*****
+    END 1. A_B RECEIVE ENCRYPTED CHALLENGE
     *****/
 
     printSecret(global_eid, &sgx_status);
