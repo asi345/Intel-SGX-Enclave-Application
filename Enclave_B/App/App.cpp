@@ -248,7 +248,7 @@ int SGX_CDECL main(int argc, char *argv[])
    /*****
     BEGIN 1. A_B SEND ENCRYPTED PSK
     *****/
-   encPsk(global_eid, &sgx_status, c, IV);
+   encPsk(global_eid, &sgx_status, &c, IV);
    if (sgx_status == SGX_SUCCESS) {
         printf("Enclave_B has sent encrypted PSK\n");
     } else {
