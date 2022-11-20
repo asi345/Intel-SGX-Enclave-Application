@@ -184,7 +184,7 @@ END 1. A_A RECEIVE PUBLIC KEY
 /*****
 BEGIN 1. A_A SEND ENCRYPTED PSK
 *****/
-void sendEncPSK(uint_8_t* c, unsigned char* IV) {
+void sendEncPSK(uint8_t *c, unsigned char *IV) {
     mkfifo("/tmp/fifoA", 0666);
     int pipe = open("/tmp/fifoA", O_WRONLY);
     // psk is 11 bytes
@@ -199,7 +199,7 @@ END 1. A_A SEND ENCRYPTED PSK
 /*****
 BEGIN 1. A_A RECEIVE ENCRYPTED PSK
 *****/
-void receiveEncPSK(uint_8_t* c, unsigned char* IV) {
+void receiveEncPSK(uint8_t *c, unsigned char *IV) {
     mkfifo("/tmp/fifoB", 0666);
     int pipe = open("/tmp/fifoB", O_RDONLY);
     read(pipe, IV, 16);
