@@ -219,7 +219,6 @@ void sendEncChal(uint8_t *c, unsigned char *IV) {
     // challenge is 2 bytes
     write(pipe, IV, 16);
     write(pipe, c, 2);
-    printf("sent %d, %d", (uint8_t) IV[0], c[0]);
     close(pipe);
 }
 /*****

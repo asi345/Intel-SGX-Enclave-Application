@@ -127,10 +127,11 @@ sgx_status_t genChal(uint8_t *c, unsigned char *p_IV) {
   if (ret != SGX_SUCCESS)
     return ret;
 
-  printf("%d-%d", numbers[0], numbers[1]);
+  printf("numbers %d-%d", numbers[0], numbers[1]);
 
   // length of numbers is 2 bytes
   ret = sgx_aes_ctr_encrypt(&key, numbers, 2, p_IV, 1, c);
+  printf("c enc %d-%d", c[0], c[1]);
   if (ret != SGX_SUCCESS)
     return ret;
   
