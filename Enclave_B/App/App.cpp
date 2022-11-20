@@ -185,8 +185,8 @@ END 1. A_B RECEIVE PUBLIC KEY
 BEGIN 1. A_B SEND ENCRYPTED PSK
 *****/
 void sendEncPSK(uint8_t *c, unsigned char *IV) {
-    mkfifo("/tmp/fifoB", 0666);
-    int pipe = open("/tmp/fifoB", O_WRONLY);
+    mkfifo("/tmp/fifoB2", 0666);
+    int pipe = open("/tmp/fifoB2", O_WRONLY);
     // psk is 11 bytes
     write(pipe, IV, 16);
     write(pipe, c, 11);
@@ -200,8 +200,8 @@ END 1. A_B SEND ENCRYPTED PSK
 BEGIN 1. A_B RECEIVE ENCRYPTED PSK
 *****/
 void receiveEncPSK(uint8_t *c, unsigned char *IV) {
-    mkfifo("/tmp/fifoA", 0666);
-    int pipe = open("/tmp/fifoA", O_RDONLY);
+    mkfifo("/tmp/fifoA2", 0666);
+    int pipe = open("/tmp/fifoA2", O_RDONLY);
     read(pipe, IV, 16);
     read(pipe, c, 11);
     close(pipe);
@@ -214,8 +214,8 @@ END 1. A_B RECEIVE ENCRYPTED PSK
 BEGIN 1. A_B RECEIVE ENCRYPTED CHALLENGE
 *****/
 void receiveEncChal(uint8_t *c, unsigned char *IV) {
-    mkfifo("/tmp/fifoC", 0666);
-    int pipe = open("/tmp/fifoC", O_RDONLY);
+    mkfifo("/tmp/fifoA3", 0666);
+    int pipe = open("/tmp/fifoA3", O_RDONLY);
     read(pipe, IV, 16);
     read(pipe, c, 2);
     printf("rec %d, %d", (uint8_t) IV[0], c[0]);
