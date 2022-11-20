@@ -322,22 +322,15 @@ int SGX_CDECL main(int argc, char *argv[])
    unsigned char IV3[16];
 
    /*****
-    BEGIN 4. A_A GENERATE AND ENCRYPT CHALLENGE
+    BEGIN 1. A_A SEND ENCRYPTED CHALLENGE
     *****/
-   genChal(global_eid, &sgx_status, c3, IV3);
-   if (sgx_status == SGX_SUCCESS) {
+    genChal(global_eid, &sgx_status, c3, IV3);
+    if (sgx_status == SGX_SUCCESS) {
         printf("Enclave_A has generated the challenge\n");
     } else {
         printf("Enclave_A could not generate the challenge\n");
         print_error_message(sgx_status);
     }
-   /*****
-    END 4. A_A GENERATE AND ENCRYPT CHALLENGE
-    *****/
-
-   /*****
-    BEGIN 1. A_A SEND ENCRYPTED CHALLENGE
-    *****/
     sendEncChal(c3, IV3);
     printf("A has sent the challenge\n");
    /*****

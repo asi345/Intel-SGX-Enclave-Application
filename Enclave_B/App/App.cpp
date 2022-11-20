@@ -331,6 +331,7 @@ int SGX_CDECL main(int argc, char *argv[])
     *****/
     receiveEncChal(c3, IV3);
     printf("B has received the challenge from A\n");
+    decChal(global_eid, &sgx_status, c3, IV3);
    /*****
     END 1. A_B RECEIVE ENCRYPTED CHALLENGE
     *****/
