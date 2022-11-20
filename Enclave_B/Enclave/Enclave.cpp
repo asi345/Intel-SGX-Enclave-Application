@@ -94,7 +94,7 @@ END 1. E_B ENCRYPTED PSK
 BEGIN 1. E_B DECRYPTED PSK
 *****/
 sgx_status_t decPsk(uint8_t *c, unsigned char *IV) {
-  uint8_t* m;
+  uint8_t m[11];
   ret = sgx_aes_ctr_decrypt(&key, c, 11, IV, 1, m);
   if (ret != SGX_SUCCESS)
     return ret;
