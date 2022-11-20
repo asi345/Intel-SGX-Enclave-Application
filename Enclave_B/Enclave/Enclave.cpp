@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "sgx_tcrypto.h"
+#include "sgx_trts.h"
 
 
 int enclave_secret = 42;
@@ -17,6 +18,10 @@ sgx_ec256_public_t public_key;
 
 sgx_ec256_dh_shared_t shared_key;
 sgx_aes_ctr_128bit_key_t key;
+
+// initialization vector should be ctr key size = 128 bits
+unsigned char IV[16];
+char PSK_A[] = "I AM BOBOB";
 
 
 /*****
@@ -60,6 +65,29 @@ sgx_status_t sharedSecret(sgx_ec256_public_t *p_pubKey) {
 }
 /*****
 END 3. E_B CALCULATE SHARED SECRET
+*****/
+
+/*****
+BEGIN 1. E_B ENCRYPTED PSK
+*****/
+sgx_status_t encPsk(uint8_t *c, unsigned char *p_IV) {
+  ret = sgx_read_rand(IV, 16);
+  if (ret != SGX_SUCCESS)
+    return ret;
+
+  for (int i = 0; i < 16; i++) {
+    p_IV[i] = IV[i];
+  }
+
+  // length of PSK is 11 bytes
+  ret = sgx_aes_ctr_encrypt(&key, PSK_B, 11, IV, 1, c);
+  if (ret != SGX_SUCCESS)
+    return ret;
+  
+  return SGX_SUCCESS;
+}
+/*****
+END 1. E_B ENCRYPTED PSK
 *****/
 
 int printf(const char* fmt, ...)

@@ -243,6 +243,22 @@ int SGX_CDECL main(int argc, char *argv[])
     END 3. A_B CALCULATE SHARED SECRET
     *****/
 
+   uint8_t c;
+   unsigned char IV[16];
+   /*****
+    BEGIN 1. A_B SEND ENCRYPTED PSK
+    *****/
+   encPsk(global_eid, &sgx_status, c, IV);
+   if (sgx_status == SGX_SUCCESS) {
+        printf("Enclave_B has sent encrypted PSK\n");
+    } else {
+        printf("Enclave_B could not send encrypted PSK\n");
+        print_error_message(sgx_status);
+    }
+   /*****
+    END 1. A_B SEND ENCRYPTED PSK
+    *****/
+
 
     printSecret(global_eid, &sgx_status);
     if (sgx_status != SGX_SUCCESS) {

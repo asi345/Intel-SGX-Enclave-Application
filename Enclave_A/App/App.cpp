@@ -181,6 +181,15 @@ sgx_ec256_public_t receivePubKey() {
 END 1. A_A RECEIVE PUBLIC KEY
 *****/
 
+/*****
+BEGIN 1. A_A SEND ENCRYPTED PSK
+*****/
+void sendEncPSK() {
+
+}
+/*****
+END 1. A_A SEND ENCRYPTED PSK
+*****/
 
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
@@ -210,7 +219,7 @@ int SGX_CDECL main(int argc, char *argv[])
     BEGIN 1. A_A SEND PUBLIC KEY
     *****/
     sendPubKey(pubKeyA);
-    printf("A has sended public key\n");
+    printf("A has sent public key\n");
     /*****
     END 1. A_A SEND PUBLIC KEY
     *****/
@@ -236,6 +245,22 @@ int SGX_CDECL main(int argc, char *argv[])
     }
    /*****
     END 3. A_A CALCULATE SHARED SECRET
+    *****/
+
+   uint8_t c;
+   unsigned char IV[16];
+   /*****
+    BEGIN 1. A_A SEND ENCRYPTED PSK
+    *****/
+   encPsk(global_eid, &sgx_status, c, IV);
+   if (sgx_status == SGX_SUCCESS) {
+        printf("Enclave_A has sent encrypted PSK\n");
+    } else {
+        printf("Enclave_A could not send encrypted PSK\n");
+        print_error_message(sgx_status);
+    }
+   /*****
+    END 1. A_A SEND ENCRYPTED PSK
     *****/
 
     printSecret(global_eid, &sgx_status);
