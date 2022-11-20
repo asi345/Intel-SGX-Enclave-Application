@@ -104,7 +104,7 @@ sgx_status_t decPsk(uint8_t *c, unsigned char *p_IV) {
       printf("%c", ch);
       printf("A could not verify identity of B\n");
       return SGX_ERROR_UNEXPECTED;
-    }
+
   }
 
   return SGX_SUCCESS;
