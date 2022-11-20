@@ -120,7 +120,7 @@ sgx_status_t decChal(uint8_t *c, unsigned char *p_IV) {
   if (ret != SGX_SUCCESS)
     return ret;
 
-  printf("%d-%d-%d-%d-%d-%d", numbers[0], numbers[1], numbers[4], numbers[5], numbers[6], numbers[7]);
+  printf("%d-%d-%d-%d-%d-%d", numbers[0], numbers[1], numbers[8], numbers[9], numbers[-1], numbers[-2]);
   
   return SGX_SUCCESS;
 }
