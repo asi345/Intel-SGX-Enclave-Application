@@ -101,7 +101,9 @@ sgx_status_t decPsk(uint8_t *c, unsigned char *IV) {
 
   const char PSK_A[] = "I AM ALICE";
   for (int i = 0; i < 11; i++) {
-    if ((char) m[i] != PSK_A[i]) {
+    char ch = (char) m[i];
+    if (ch != PSK_A[i]) {
+      printf(ch);
       printf("B could not verify identity of A\n");
       return SGX_ERROR_UNEXPECTED;
     }
