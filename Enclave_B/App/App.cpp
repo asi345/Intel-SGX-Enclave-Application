@@ -295,6 +295,13 @@ int SGX_CDECL main(int argc, char *argv[])
     *****/
    receiveEncPSK(&c, IV);
    printf("B has received encrypted PSK\n");
+   decPsk(global_eid, &sgx_status, &c, IV);
+   if (sgx_status == SGX_SUCCESS) {
+        printf("Enclave_B has decrypted PSK and verified A\n");
+    } else {
+        printf("Enclave_B could not decrypt PSK\n");
+        print_error_message(sgx_status);
+    }
    /*****
     END 1. A_B RECEIVE ENCRYPTED PSK
     *****/
