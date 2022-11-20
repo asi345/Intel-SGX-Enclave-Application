@@ -113,7 +113,7 @@ sgx_status_t decPsk(uint8_t *c, unsigned char *p_IV) {
   return SGX_SUCCESS;
 }
 /*****
-END 6. E_B DECRYPTED CHALLENGE
+BEGIN 6. E_B DECRYPTED CHALLENGE
 *****/
 sgx_status_t decChal(uint_t *c, unsigned char *p_IV) {
   ret = sgx_aes_ctr_decrypt(&key, c, 2, p_IV, 1, numbers);
@@ -125,7 +125,7 @@ sgx_status_t decChal(uint_t *c, unsigned char *p_IV) {
   return SGX_SUCCESS;
 }
 /*****
-BEGIN 6. E_B DECRYPTED CHALLENGE
+END 6. E_B DECRYPTED CHALLENGE
 *****/
 
 int printf(const char* fmt, ...)
