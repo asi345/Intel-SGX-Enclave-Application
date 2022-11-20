@@ -218,6 +218,7 @@ void receiveEncChal(uint8_t *c, unsigned char *IV) {
     int pipe = open("/tmp/fifoA", O_RDONLY);
     read(pipe, IV, 16);
     read(pipe, c, 2);
+    printf("rec %d, %d", (uint8_t) IV[0], c[0]);
     close(pipe);
 }
 /*****
