@@ -149,9 +149,6 @@ void ocall_print_string(const char *str)
     printf("%s", str);
 }
 
-char *fifoSend = "/tmp/fifoB";
-char *fifoReceive = "/tmp/fifoA";
-
 /*****
 BEGIN 1. A_B SEND PUBLIC KEY
 *****/
