@@ -184,6 +184,35 @@ sgx_ec256_public_t receivePubKey() {
 END 1. A_B RECEIVE PUBLIC KEY
 *****/
 
+/*****
+BEGIN 1. A_B SEND ENCRYPTED PSK
+*****/
+void sendEncPSK(uint_8_t* c, unsigned char* IV) {
+    mkfifo("/tmp/fifoB", 0666);
+    int pipe = open("/tmp/fifoB", O_WRONLY);
+    // psk is 11 bytes
+    write(pipe, IV, 16);
+    write(pipe, c, 11);
+    close(pipe);
+}
+/*****
+END 1. A_B SEND ENCRYPTED PSK
+*****/
+
+/*****
+BEGIN 1. A_B RECEIVE ENCRYPTED PSK
+*****/
+void receiveEncPSK(uint_8_t* c, unsigned char* IV) {
+    mkfifo("/tmp/fifoA", 0666);
+    int pipe = open("/tmp/fifoA", O_RDONLY);
+    read(pipe, IV, 16);
+    read(pipe, c, 11);
+    close(pipe);
+}
+/*****
+END 1. A_B RECEIVE ENCRYPTED PSK
+*****/
+
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
 {
@@ -255,10 +284,20 @@ int SGX_CDECL main(int argc, char *argv[])
         printf("Enclave_B could not send encrypted PSK\n");
         print_error_message(sgx_status);
     }
+    sendEncPSK(&c, IV);
+    printf("B has sent encrypted PSK\n");
    /*****
     END 1. A_B SEND ENCRYPTED PSK
     *****/
 
+   /*****
+    BEGIN 1. A_B RECEIVE ENCRYPTED PSK
+    *****/
+   receiveEncPSK(&c, IV);
+   printf("B has received encrypted PSK\n");
+   /*****
+    END 1. A_B RECEIVE ENCRYPTED PSK
+    *****/
 
     printSecret(global_eid, &sgx_status);
     if (sgx_status != SGX_SUCCESS) {
