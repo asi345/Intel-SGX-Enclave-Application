@@ -21,7 +21,7 @@ sgx_aes_ctr_128bit_key_t key;
 
 // initialization vector should be ctr key size = 128 bits
 unsigned char IV[16];
-char PSK_A[] = "I AM BOBOB";
+const char PSK_B[] = "I AM BOBOB";
 
 
 /*****
@@ -80,7 +80,7 @@ sgx_status_t encPsk(uint8_t *c, unsigned char *p_IV) {
   }
 
   // length of PSK is 11 bytes
-  ret = sgx_aes_ctr_encrypt(&key, PSK_B, 11, IV, 1, c);
+  ret = sgx_aes_ctr_encrypt(&key, (const uint8_t*) PSK_B, 11, IV, 1, c);
   if (ret != SGX_SUCCESS)
     return ret;
   
