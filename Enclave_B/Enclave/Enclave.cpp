@@ -93,9 +93,9 @@ END 1. E_B ENCRYPTED PSK
 /*****
 BEGIN 1. E_B DECRYPTED PSK
 *****/
-sgx_status_t decPsk(uint8_t *c, unsigned char *IV) {
+sgx_status_t decPsk(uint8_t *c, unsigned char *p_IV) {
   uint8_t m[11];
-  ret = sgx_aes_ctr_decrypt(&key, c, 11, IV, 1, m);
+  ret = sgx_aes_ctr_decrypt(&key, c, 11, p_IV, 1, m);
   if (ret != SGX_SUCCESS)
     return ret;
 
@@ -103,7 +103,7 @@ sgx_status_t decPsk(uint8_t *c, unsigned char *IV) {
   for (int i = 0; i < 11; i++) {
     char ch = (char) m[i];
     if (ch != PSK_A[i]) {
-      printf(ch);
+      printf("%c", ch);
       printf("B could not verify identity of A\n");
       return SGX_ERROR_UNEXPECTED;
     }
