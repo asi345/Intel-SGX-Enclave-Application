@@ -214,8 +214,8 @@ END 1. A_B RECEIVE ENCRYPTED PSK
 BEGIN 1. A_B RECEIVE ENCRYPTED CHALLENGE
 *****/
 void receiveEncChal(uint8_t *c, unsigned char *IV) {
-    mkfifo("/tmp/fifoA", 0666);
-    int pipe = open("/tmp/fifoA", O_RDONLY);
+    mkfifo("/tmp/fifoC", 0666);
+    int pipe = open("/tmp/fifoC", O_RDONLY);
     read(pipe, IV, 16);
     read(pipe, c, 2);
     printf("rec %d, %d", (uint8_t) IV[0], c[0]);
