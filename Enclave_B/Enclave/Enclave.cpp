@@ -115,7 +115,7 @@ sgx_status_t decPsk(uint8_t *c, unsigned char *p_IV) {
 /*****
 BEGIN 6. E_B DECRYPTED CHALLENGE
 *****/
-sgx_status_t decChal(uint_t *c, unsigned char *p_IV) {
+sgx_status_t decChal(uint8_t *c, unsigned char *p_IV) {
   ret = sgx_aes_ctr_decrypt(&key, c, 2, p_IV, 1, numbers);
   if (ret != SGX_SUCCESS)
     return ret;
