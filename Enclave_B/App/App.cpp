@@ -213,12 +213,11 @@ END 1. A_B RECEIVE ENCRYPTED PSK
 /*****
 BEGIN 1. A_B RECEIVE ENCRYPTED CHALLENGE
 *****/
-void receiveEncChal(uint8_t *c, unsigned char *IV) {
+void receiveEncChal(uint8_t *cA, uint8_t *cB) {
     mkfifo("/tmp/fifoA3", 0666);
     int pipe = open("/tmp/fifoA3", O_RDONLY);
-    read(pipe, IV, 16);
-    read(pipe, c, 2);
-    printf("rec %d, %d", (uint8_t) IV[0], c[0]);
+    read(pipe, cA, 1);
+    read(pipe, cB, 1);
     close(pipe);
 }
 /*****
@@ -321,15 +320,15 @@ int SGX_CDECL main(int argc, char *argv[])
     END 1. A_B RECEIVE ENCRYPTED PSK
     *****/
 
-   uint8_t c3[2];
-   unsigned char IV3[16];
+   uint8_t cA;
+   uint8_t cB;
 
    /*****
     BEGIN 1. A_B RECEIVE ENCRYPTED CHALLENGE
     *****/
-    receiveEncChal(c3, IV3);
+    receiveEncChal(&cA, &cB);
     printf("B has received the challenge from A\n");
-    decChal(global_eid, &sgx_status, c3, IV3);
+    decChal(global_eid, &sgx_status, &cA, &cB);
     if (sgx_status == SGX_SUCCESS) {
         printf("Enclave_B has decrypted the challenge\n");
     } else {

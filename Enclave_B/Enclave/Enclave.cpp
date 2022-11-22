@@ -24,7 +24,8 @@ unsigned char IV[16];
 const char PSK_B[] = "I AM BOBOB";
 
 // the challenge numbers to be added
-uint8_t numbers[2];
+uint8_t a;
+uint8_t b;
 
 /*****
 BEGIN 2. E_B GENERATE KEY PAIR
@@ -115,13 +116,23 @@ sgx_status_t decPsk(uint8_t *c, unsigned char *p_IV) {
 /*****
 BEGIN 6. E_B DECRYPTED CHALLENGE
 *****/
-sgx_status_t decChal(uint8_t *c, unsigned char *p_IV) {
-  printf("c dec %d-%d-%d-%dcalissana", p_IV[14], p_IV[15], c[0], c[1]);
-  ret = sgx_aes_ctr_decrypt(&key, c, 2, p_IV, 1, numbers);
+sgx_status_t decChal(uint8_t *cA, uint8_t *cB) {
+  uint8_t IV_zero[16];
+  for (int i = 0; i < 16; i ++) {
+    IV_zero[i] = 0;
+  }
+
+  printf("c dec %d-%d-%d-%dcalissana", IV_zero[14], IV_zero[15], *cA, *cB);
+
+  ret = sgx_aes_ctr_decrypt(&key, cA, 1, IV_zero, 1, &a);
   if (ret != SGX_SUCCESS)
     return ret;
 
-  printf("%d-%d-%d-%d-%d-%d", numbers[0], numbers[1], numbers[8], numbers[9], numbers[-1], numbers[-2]);
+  ret = sgx_aes_ctr_decrypt(&key, cB, 1, IV_zero, 1, &b);
+  if (ret != SGX_SUCCESS)
+    return ret;
+
+  printf("%d-%d", a, b);
   
   return SGX_SUCCESS;
 }

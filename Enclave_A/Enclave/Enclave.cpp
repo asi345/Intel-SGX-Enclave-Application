@@ -23,7 +23,8 @@ unsigned char IV[16];
 const char PSK_A[] = "I AM ALICE";
 
 // the challenge numbers to be added
-uint8_t numbers[2];
+uint8_t a;
+uint8_t b;
 
 /*****
 BEGIN 2. E_A GENERATE KEY PAIR
@@ -118,22 +119,32 @@ END 1. E_A DECRYPTED PSK
 /*****
 BEGIN 4. E_A GENERATE AND ENCRYPT CHALLENGE
 *****/
-sgx_status_t genChal(uint8_t *c, unsigned char *p_IV) {
-  ret = sgx_read_rand(numbers, 2);
+sgx_status_t genChal(uint8_t *cA, uint8_t *cB) {
+  ret = sgx_read_rand(&a, 1);
   if (ret != SGX_SUCCESS)
     return ret;
 
-  ret = sgx_read_rand(p_IV, 16);
+  ret = sgx_read_rand(&b, 1);
   if (ret != SGX_SUCCESS)
     return ret;
 
-  printf("numbers %d-%d", numbers[0], numbers[1]);
+  uint8_t IV_zero[16];
+  for (int i = 0; i < 16; i ++) {
+    IV_zero[i] = 0;
+  }
+
+  printf("numbers %d-%d", a, b);
 
   // length of numbers is 2 bytes
-  ret = sgx_aes_ctr_encrypt(&key, numbers, 2, p_IV, 1, c);
-  printf("c enc %d-%d-%d-%d", p_IV[14], p_IV[15], c[0], c[1]);
+  ret = sgx_aes_ctr_encrypt(&key, &a, 1, IV_zero, 1, cA);
   if (ret != SGX_SUCCESS)
     return ret;
+  
+  ret = sgx_aes_ctr_encrypt(&key, &b, 1, IV_zero, 1, cB);
+  if (ret != SGX_SUCCESS)
+    return ret;
+
+  printf("c enc %d-%d-%d-%d", IV_zero[14], IV_zero[15], *cA, *cB);
   
   return SGX_SUCCESS;
 }

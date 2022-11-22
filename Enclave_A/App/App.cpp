@@ -213,12 +213,12 @@ END 1. A_A RECEIVE ENCRYPTED PSK
 /*****
 BEGIN 1. A_A SEND ENCRYPTED CHALLENGE
 *****/
-void sendEncChal(uint8_t *c, unsigned char *IV) {
+void sendEncChal(uint8_t *cA, uint8_t *cB) {
     mkfifo("/tmp/fifoA3", 0666);
     int pipe = open("/tmp/fifoA3", O_WRONLY);
     // challenge is 2 bytes
-    write(pipe, IV, 16);
-    write(pipe, c, 2);
+    write(pipe, cA, 1);
+    write(pipe, cB, 1);
     close(pipe);
 }
 /*****
@@ -318,20 +318,20 @@ int SGX_CDECL main(int argc, char *argv[])
     END 1. A_A RECEIVE ENCRYPTED PSK
     *****/
 
-   uint8_t c3[2];
-   unsigned char IV3[16];
+   uint8_t cA;
+   uint8_t cB;
 
    /*****
     BEGIN 1. A_A SEND ENCRYPTED CHALLENGE
     *****/
-    genChal(global_eid, &sgx_status, c3, IV3);
+    genChal(global_eid, &sgx_status, &cA, &cB);
     if (sgx_status == SGX_SUCCESS) {
         printf("Enclave_A has generated the challenge\n");
     } else {
         printf("Enclave_A could not generate the challenge\n");
         print_error_message(sgx_status);
     }
-    sendEncChal(c3, IV3);
+    sendEncChal(&cA, &cB);
     printf("A has sent the challenge\n");
    /*****
     END 1. A_A SEND ENCRYPTED CHALLENGE
