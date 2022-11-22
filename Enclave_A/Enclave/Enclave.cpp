@@ -19,7 +19,7 @@ sgx_ec256_dh_shared_t shared_key;
 sgx_aes_ctr_128bit_key_t key;
 
 // initialization vector should be ctr key size = 128 bits
-unsigned char IV[16];
+uint8_t IV_zero[16];
 const char PSK_A[] = "I AM ALICE";
 
 // the challenge numbers to be added
@@ -72,17 +72,14 @@ END 3. E_A CALCULATE SHARED SECRET
 /*****
 BEGIN 1. E_A ENCRYPTED PSK
 *****/
-sgx_status_t encPsk(uint8_t *c, unsigned char *p_IV) {
-  ret = sgx_read_rand(IV, 16);
-  if (ret != SGX_SUCCESS)
-    return ret;
+sgx_status_t encPsk(uint8_t *c) {
 
-  for (int i = 0; i < 16; i++) {
-    p_IV[i] = IV[i];
+  for (int i = 0; i < 16; i ++) {
+    IV_zero[i] = 0;
   }
 
   // length of PSK is 11 bytes
-  ret = sgx_aes_ctr_encrypt(&key, (const uint8_t*) PSK_A, 11, IV, 1, c);
+  ret = sgx_aes_ctr_encrypt(&key, (const uint8_t*) PSK_A, 11, IV_zero, 1, c);
   if (ret != SGX_SUCCESS)
     return ret;
   
@@ -95,9 +92,9 @@ END 1. E_A ENCRYPTED PSK
 /*****
 BEGIN 1. E_A DECRYPTED PSK
 *****/
-sgx_status_t decPsk(uint8_t *c, unsigned char *p_IV) {
+sgx_status_t decPsk(uint8_t *c) {
   uint8_t m[11];
-  ret = sgx_aes_ctr_decrypt(&key, c, 11, p_IV, 1, m);
+  ret = sgx_aes_ctr_decrypt(&key, c, 11, IV_zero, 1, m);
   if (ret != SGX_SUCCESS)
     return ret;
 
@@ -127,11 +124,6 @@ sgx_status_t genChal(uint8_t *cA, uint8_t *cB) {
   ret = sgx_read_rand(&b, 1);
   if (ret != SGX_SUCCESS)
     return ret;
-
-  uint8_t IV_zero[16];
-  for (int i = 0; i < 16; i ++) {
-    IV_zero[i] = 0;
-  }
 
   printf("numbers %d-%d", a, b);
 

@@ -184,11 +184,10 @@ END 1. A_A RECEIVE PUBLIC KEY
 /*****
 BEGIN 1. A_A SEND ENCRYPTED PSK
 *****/
-void sendEncPSK(uint8_t *c, unsigned char *IV) {
+void sendEncPSK(uint8_t *c) {
     mkfifo("/tmp/fifoA2", 0666);
     int pipe = open("/tmp/fifoA2", O_WRONLY);
     // psk is 11 bytes
-    write(pipe, IV, 16);
     write(pipe, c, 11);
     close(pipe);
 }
@@ -199,10 +198,9 @@ END 1. A_A SEND ENCRYPTED PSK
 /*****
 BEGIN 1. A_A RECEIVE ENCRYPTED PSK
 *****/
-void receiveEncPSK(uint8_t *c, unsigned char *IV) {
+void receiveEncPSK(uint8_t *c) {
     mkfifo("/tmp/fifoB2", 0666);
     int pipe = open("/tmp/fifoB2", O_RDONLY);
-    read(pipe, IV, 16);
     read(pipe, c, 11);
     close(pipe);
 }
@@ -282,32 +280,31 @@ int SGX_CDECL main(int argc, char *argv[])
     *****/
 
    uint8_t c[11];
-   unsigned char IV[16];
+
    /*****
     BEGIN 1. A_A SEND ENCRYPTED PSK
     *****/
-   encPsk(global_eid, &sgx_status, c, IV);
+   encPsk(global_eid, &sgx_status, c);
    if (sgx_status == SGX_SUCCESS) {
         printf("Enclave_A has sent encrypted PSK\n");
     } else {
         printf("Enclave_A could not send encrypted PSK\n");
         print_error_message(sgx_status);
     }
-    sendEncPSK(c, IV);
+    sendEncPSK(c);
     printf("A has sent encrypted PSK\n");
    /*****
     END 1. A_A SEND ENCRYPTED PSK
     *****/
 
    uint8_t c2[11];
-   unsigned char IV2[16];
 
    /*****
     BEGIN 1. A_A RECEIVE ENCRYPTED PSK
     *****/
-   receiveEncPSK(c2, IV2);
+   receiveEncPSK(c2);
    printf("A has received encrypted PSK\n");
-   decPsk(global_eid, &sgx_status, c2, IV2);
+   decPsk(global_eid, &sgx_status, c2);
    if (sgx_status == SGX_SUCCESS) {
         printf("Enclave_A has decrypted PSK and verified B\n");
     } else {
