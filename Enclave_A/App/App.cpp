@@ -348,7 +348,7 @@ int SGX_CDECL main(int argc, char *argv[])
     *****/
 
     uint8_t cResp;
-    bool verified;
+    int verified = 0;
 
     /*****
     BEGIN 1. A_A RECEIVE ENCRYPTED RESPONSE
@@ -362,7 +362,7 @@ int SGX_CDECL main(int argc, char *argv[])
         printf("Enclave_A could not decrypt the challenge\n");
         print_error_message(sgx_status);
     }
-    if (verified)
+    if (verified == 1)
         printf("A HAS VERIFIED THE RESPONSE FROM B AS TRUE\n");
     else
         printf("A HAS VERIFIED THE RESPONSE FROM B AS FALSE\n");

@@ -140,7 +140,7 @@ BEGIN 7. E_B ENCRYPTED RESPONSE
 sgx_status_t encResp(uint8_t *c) {
   sum = a + b;
 
-  ret = sgx_aes_ctr_encrypt(&key, sum, 1, IV_zero, 1, c);
+  ret = sgx_aes_ctr_encrypt(&key, &sum, 1, IV_zero, 1, c);
   if (ret != SGX_SUCCESS)
     return ret;
   
