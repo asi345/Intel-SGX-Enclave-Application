@@ -148,7 +148,7 @@ END 4. E_A GENERATE AND ENCRYPT CHALLENGE
 BEGIN 5. E_A DECRYPT AND VERIFY RESPONSE
 *****/
 sgx_status_t decResp(uint8_t *c, int *verified) {
-  uint8_t *p_sumResp = &semResp;
+  uint8_t *p_sumResp = &sumResp;
 
   ret = sgx_aes_ctr_decrypt(&key, c, 1, IV_zero, 1, p_sumResp);
   if (ret != SGX_SUCCESS)
