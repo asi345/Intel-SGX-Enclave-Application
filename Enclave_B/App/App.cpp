@@ -222,6 +222,19 @@ void receiveEncChal(uint8_t *cA, uint8_t *cB) {
 END 1. A_B RECEIVE ENCRYPTED CHALLENGE
 *****/
 
+/*****
+BEGIN 1. A_B SEND ENCRYPTED RESPONSE
+*****/
+void sendEncResp(uint8_t *cResp) {
+    mkfifo("/tmp/fifoB3", 0666);
+    int pipe = open("/tmp/fifoB3", O_WRONLY);
+    write(pipe, cResp, 1);
+    close(pipe);
+}
+/*****
+END 1. A_B SEND ENCRYPTED RESPONSE
+*****/
+
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
 {
@@ -334,6 +347,24 @@ int SGX_CDECL main(int argc, char *argv[])
     }
    /*****
     END 1. A_B RECEIVE ENCRYPTED CHALLENGE
+    *****/
+
+   uint8_t cResp;
+
+   /*****
+    BEGIN 1. A_B SEND ENCRYPTED RESPONSE
+    *****/
+    encResp(global_eid, &sgx_status, &cResp);
+    if (sgx_status == SGX_SUCCESS) {
+        printf("Enclave_B has encrypted the response\n");
+    } else {
+        printf("Enclave_B could not encrypt the response\n");
+        print_error_message(sgx_status);
+    }
+    sendEncResp(&cResp);
+    printf("B has sent the response\n");
+   /*****
+    END 1. A_B SEND ENCRYPTED RESPONSE
     *****/
 
     printSecret(global_eid, &sgx_status);

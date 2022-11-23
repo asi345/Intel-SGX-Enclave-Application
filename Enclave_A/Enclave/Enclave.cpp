@@ -26,6 +26,9 @@ const char PSK_A[] = "I AM ALICE";
 uint8_t a;
 uint8_t b;
 
+uint8_t sumResp;
+uint8_t sumReal;
+
 /*****
 BEGIN 2. E_A GENERATE KEY PAIR
 *****/
@@ -102,7 +105,6 @@ sgx_status_t decPsk(uint8_t *c) {
   for (int i = 0; i < 11; i++) {
     uint8_t ch = (uint8_t) PSK_B[i];
     if (ch != m[i + 11]) {
-      printf("A could not verify identity of B\n");
       return SGX_ERROR_UNEXPECTED;
     }
   }
@@ -125,7 +127,7 @@ sgx_status_t genChal(uint8_t *cA, uint8_t *cB) {
   if (ret != SGX_SUCCESS)
     return ret;
 
-  printf("numbers %d-%d", a, b);
+  sumReal = a + b;
 
   // length of numbers is 2 bytes
   ret = sgx_aes_ctr_encrypt(&key, &a, 1, IV_zero, 1, cA);
@@ -135,13 +137,32 @@ sgx_status_t genChal(uint8_t *cA, uint8_t *cB) {
   ret = sgx_aes_ctr_encrypt(&key, &b, 1, IV_zero, 1, cB);
   if (ret != SGX_SUCCESS)
     return ret;
-
-  printf("c enc %d-%d-%d-%d", IV_zero[14], IV_zero[15], *cA, *cB);
   
   return SGX_SUCCESS;
 }
 /*****
 END 4. E_A GENERATE AND ENCRYPT CHALLENGE
+*****/
+
+/*****
+BEGIN 5. E_A DECRYPT AND VERIFY RESPONSE
+*****/
+sgx_status_t decResp(uint8_t *c, bool *verified) {
+  uint8_t *p_sumResp = &semResp;
+
+  ret = sgx_aes_ctr_decrypt(&key, c, 1, IV_zero, 1, p_sumResp);
+  if (ret != SGX_SUCCESS)
+    return ret;
+  
+  if (p_sumResp[1] == sumReal)
+    *verified = true;
+  else
+    *verified = false;
+  
+  return SGX_SUCCESS;
+}
+/*****
+END 5. E_A DECRYPT AND VERIFY RESPONSE
 *****/
 
 int printf(const char* fmt, ...)

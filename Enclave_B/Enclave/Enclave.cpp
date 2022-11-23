@@ -27,6 +27,8 @@ const char PSK_B[] = "I AM BOBOB";
 uint8_t a;
 uint8_t b;
 
+uint8_t sum;
+
 /*****
 BEGIN 2. E_B GENERATE KEY PAIR
 *****/
@@ -111,12 +113,13 @@ sgx_status_t decPsk(uint8_t *c) {
   return SGX_SUCCESS;
 }
 /*****
+END 1. E_B DECRYPTED PSK
+*****/
+
+/*****
 BEGIN 6. E_B DECRYPTED CHALLENGE
 *****/
 sgx_status_t decChal(uint8_t *cA, uint8_t *cB) {
-
-  printf("c dec %d-%d-%d-%dcalissana", IV_zero[14], IV_zero[15], *cA, *cB);
-
   ret = sgx_aes_ctr_decrypt(&key, cA, 1, IV_zero, 1, &a);
   if (ret != SGX_SUCCESS)
     return ret;
@@ -124,13 +127,27 @@ sgx_status_t decChal(uint8_t *cA, uint8_t *cB) {
   ret = sgx_aes_ctr_decrypt(&key, cB, 1, IV_zero, 1, &b);
   if (ret != SGX_SUCCESS)
     return ret;
-
-  printf("%d-%d", a, b);
   
   return SGX_SUCCESS;
 }
 /*****
 END 6. E_B DECRYPTED CHALLENGE
+*****/
+
+/*****
+BEGIN 7. E_B ENCRYPTED RESPONSE
+*****/
+sgx_status_t encResp(uint8_t *c) {
+  sum = a + b;
+
+  ret = sgx_aes_ctr_encrypt(&key, sum, 1, IV_zero, 1, c);
+  if (ret != SGX_SUCCESS)
+    return ret;
+  
+  return SGX_SUCCESS;
+}
+/*****
+END 7. E_B ENCRYPTED RESPONSE
 *****/
 
 int printf(const char* fmt, ...)
