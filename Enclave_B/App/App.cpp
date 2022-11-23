@@ -328,42 +328,46 @@ int SGX_CDECL main(int argc, char *argv[])
     END 1. A_B RECEIVE ENCRYPTED PSK
     *****/
 
-   uint8_t cA;
-   uint8_t cB;
+   for (int count = 1; count < 21; count++) {
 
-   /*****
-    BEGIN 1. A_B RECEIVE ENCRYPTED CHALLENGE
-    *****/
-    receiveEncChal(&cA, &cB);
-    printf("B has received the challenge from A\n");
-    decChal(global_eid, &sgx_status, &cA, &cB);
-    if (sgx_status == SGX_SUCCESS) {
-        printf("Enclave_B has decrypted the challenge\n");
-    } else {
-        printf("Enclave_B could not decrypt the challenge\n");
-        print_error_message(sgx_status);
-    }
-   /*****
-    END 1. A_B RECEIVE ENCRYPTED CHALLENGE
-    *****/
+        uint8_t cA;
+        uint8_t cB;
 
-   uint8_t cResp;
+        /*****
+        BEGIN 1. A_B RECEIVE ENCRYPTED CHALLENGE
+        *****/
+        receiveEncChal(&cA, &cB);
+        printf("B has received the challenge %d from A\n", count);
+        decChal(global_eid, &sgx_status, &cA, &cB);
+        if (sgx_status == SGX_SUCCESS) {
+            printf("Enclave_B has decrypted the challenge %d\n", count);
+        } else {
+            printf("Enclave_B could not decrypt the challenge %d\n", count);
+            print_error_message(sgx_status);
+        }
+        /*****
+        END 1. A_B RECEIVE ENCRYPTED CHALLENGE
+        *****/
 
-   /*****
-    BEGIN 1. A_B SEND ENCRYPTED RESPONSE
-    *****/
-    encResp(global_eid, &sgx_status, &cResp);
-    if (sgx_status == SGX_SUCCESS) {
-        printf("Enclave_B has encrypted the response\n");
-    } else {
-        printf("Enclave_B could not encrypt the response\n");
-        print_error_message(sgx_status);
-    }
-    sendEncResp(&cResp);
-    printf("B has sent the response\n");
-   /*****
-    END 1. A_B SEND ENCRYPTED RESPONSE
-    *****/
+        uint8_t cResp;
+
+        /*****
+        BEGIN 1. A_B SEND ENCRYPTED RESPONSE
+        *****/
+        encResp(global_eid, &sgx_status, &cResp);
+        if (sgx_status == SGX_SUCCESS) {
+            printf("Enclave_B has encrypted the response %d\n", count);
+        } else {
+            printf("Enclave_B could not encrypt the response %d\n", count);
+            print_error_message(sgx_status);
+        }
+        sendEncResp(&cResp);
+        printf("B has sent the response %d\n", count);
+        /*****
+        END 1. A_B SEND ENCRYPTED RESPONSE
+        *****/
+
+   }
 
     printSecret(global_eid, &sgx_status);
     if (sgx_status != SGX_SUCCESS) {

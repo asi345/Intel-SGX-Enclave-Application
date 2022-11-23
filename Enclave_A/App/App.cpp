@@ -328,47 +328,51 @@ int SGX_CDECL main(int argc, char *argv[])
     END 1. A_A RECEIVE ENCRYPTED PSK
     *****/
 
-   uint8_t cA;
-   uint8_t cB;
+   for (int count = 1; count < 21; count++) {
 
-   /*****
-    BEGIN 1. A_A SEND ENCRYPTED CHALLENGE
-    *****/
-    genChal(global_eid, &sgx_status, &cA, &cB);
-    if (sgx_status == SGX_SUCCESS) {
-        printf("Enclave_A has generated the challenge\n");
-    } else {
-        printf("Enclave_A could not generate the challenge\n");
-        print_error_message(sgx_status);
-    }
-    sendEncChal(&cA, &cB);
-    printf("A has sent the challenge\n");
-   /*****
-    END 1. A_A SEND ENCRYPTED CHALLENGE
-    *****/
+        uint8_t cA;
+        uint8_t cB;
 
-    uint8_t cResp;
-    int verified = 0;
+        /*****
+        BEGIN 1. A_A SEND ENCRYPTED CHALLENGE
+        *****/
+        genChal(global_eid, &sgx_status, &cA, &cB);
+        if (sgx_status == SGX_SUCCESS) {
+            printf("Enclave_A has generated the challenge %d\n", count);
+        } else {
+            printf("Enclave_A could not generate the challenge %d\n", count);
+            print_error_message(sgx_status);
+        }
+        sendEncChal(&cA, &cB);
+        printf("A has sent the challenge %d\n", count);
+        /*****
+        END 1. A_A SEND ENCRYPTED CHALLENGE
+        *****/
 
-    /*****
-    BEGIN 1. A_A RECEIVE ENCRYPTED RESPONSE
-    *****/
-    receiveEncResp(&cResp);
-    printf("A has received the encrypted response\n");
-    decResp(global_eid, &sgx_status, &cResp, &verified);
-    if (sgx_status == SGX_SUCCESS) {
-        printf("Enclave_A has decrypted the challenge\n");
-    } else {
-        printf("Enclave_A could not decrypt the challenge\n");
-        print_error_message(sgx_status);
-    }
-    if (verified == 1)
-        printf("A HAS VERIFIED THE RESPONSE FROM B AS TRUE\n");
-    else
-        printf("A HAS VERIFIED THE RESPONSE FROM B AS FALSE\n");
-    /*****
-    END 1. A_A RECEIVE ENCRYPTED RESPONSE
-    *****/
+        uint8_t cResp;
+        int verified = 0;
+
+        /*****
+        BEGIN 1. A_A RECEIVE ENCRYPTED RESPONSE
+        *****/
+        receiveEncResp(&cResp);
+        printf("A has received the encrypted response %d\n", count);
+        decResp(global_eid, &sgx_status, &cResp, &verified);
+        if (sgx_status == SGX_SUCCESS) {
+            printf("Enclave_A has decrypted the challenge %d\n", count);
+        } else {
+            printf("Enclave_A could not decrypt the challenge %d\n", count);
+            print_error_message(sgx_status);
+        }
+        if (verified == 1)
+            printf("A HAS VERIFIED THE RESPONSE %d FROM B AS TRUE\n", count);
+        else
+            printf("A HAS VERIFIED THE RESPONSE %d FROM B AS FALSE\n", count);
+        /*****
+        END 1. A_A RECEIVE ENCRYPTED RESPONSE
+        *****/
+
+   }
 
     printSecret(global_eid, &sgx_status);
     if (sgx_status != SGX_SUCCESS) {
