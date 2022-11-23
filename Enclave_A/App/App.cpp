@@ -285,7 +285,7 @@ int SGX_CDECL main(int argc, char *argv[])
     if (sgx_status == SGX_SUCCESS) {
         printf("Enclave_A calculated shared key\n");
     } else {
-        printf("Enclave_A could not calculate shared key\n");
+        printf("Enclave_A could calculate shared key\n");
         print_error_message(sgx_status);
     }
    /*****
