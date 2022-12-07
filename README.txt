@@ -15,7 +15,7 @@ See the outputs from App B
 $ cat App_B_output.txt
 
 The output files shows an execution flow and confirms the tasks that were done.
-One could check if the challenge was successful by checking if the outpus are
+One could check if the challenge was successful by checking if the outputs are
 positive. If in the output of App A, 'A HAS VERIFIED THE RESPONSE FROM B AS TRUE'
 is written, then it means that the challenge is solved successfully. If in the
 output of A, 'A HAS VERIFIED THE RESPONSE FROM B AS FALSE' is written, then it
