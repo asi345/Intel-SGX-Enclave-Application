@@ -21,15 +21,19 @@ A2 : Untrusted App 2
 
 ## Steps to compile and run the project 
 Clean the environment from earlier compilations
+
 $ ./cleaner.sh
 
 Run the project
+
 $ ./run.sh
 
 See the outputs from App A
+
 $ cat App_A_output.txt
 
 See the outputs from App B
+
 $ cat App_B_output.txt
 
 The output files shows an execution flow and confirms the tasks that were done.
