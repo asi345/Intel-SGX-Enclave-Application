@@ -12,8 +12,11 @@ The whole protocol can be viewed below:
 ![Implemented Protocol](./Protocol.png "This mess just to add 2 numbers?!!")
 
 E1 : Enclave 1
+
 A1 : Untrusted App 1
+
 E2 : Enclave 2
+
 A2 : Untrusted App 2
 
 ## Steps to compile and run the project 
