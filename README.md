@@ -1,6 +1,6 @@
 # Intel-SGX-Enclave-Application
 
-My solution to 3rd project of the course System Security Autumn Semester 2022. I implemented 2
+My solution to 3rd project of the course System Security Autumn Semester 2022 in ETH Zurich. I implemented 2
 untrusted applications and 2 enclave applications in Intel SGX. The applications firstly communicate each other 
 to compute a symmetrich shared key using Diffie-Hellman Key Exchange protocol with identity authentication. Then,
 App2 proves to App1 that he/she can compute the addition of 2 integers. For this, App1 sens two
